@@ -1,0 +1,25 @@
+steps:
+  # Step 1: Build the Docker image and tag it with the Git commit hash
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/devops-app-repo/webapp:$COMMIT_SHA'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/devops-app-repo/webapp:latest'
+      - '.'
+
+  # Step 2: Push the tagged Docker images to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'push'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/devops-app-repo/webapp:$COMMIT_SHA'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'push'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/devops-app-repo/webapp:latest'
+
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/devops-app-repo/webapp:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/devops-app-repo/webapp:latest'
